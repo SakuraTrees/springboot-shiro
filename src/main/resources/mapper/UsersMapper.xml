@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dongliang.shirologinmyauthorization.mapper.UsersMapper">
+    <cache readOnly="true"/>
+    <resultMap id="selByUsernameMap" type="users">
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="password_salt" property="passwordSalt"/>
+        <collection property="permissions" ofType="java.lang.String" javaType="java.util.ArrayList">
+            <result column="permission_name"/>
+        </collection>
+    </resultMap>
+
+    <select id="selByUsername" resultMap="selByUsernameMap">
+        select u.username,u.password,u.password_salt,p.permission_name   from users u
+        left join role r on u.role_id = r.id
+        left join permission p on r.id = p.role_id
+        <where>
+            and username = #{username}
+        </where>
+    </select>
+</mapper>
